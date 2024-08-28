@@ -6,17 +6,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private FloatingJoystick joyStick;
+    [SerializeField] private FixedJoystick joyStick;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float speed;
     [SerializeField] private ColorData colorData;
     [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
     [SerializeField] private ColorType myColor;
-    [SerializeField] private Transform brickStackPos;
+    [SerializeField] private Transform stackOffset;
     public ColorType ColorType => myColor;
     
     private float eulerDirection = 0;
-    private int bricksNum = 0;
     private Stack<GameObject> BrickStack = new Stack<GameObject>();
 
     //Test
@@ -27,16 +26,15 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        //Movement
-        rb.velocity = new Vector3(joyStick.Direction.x, rb.velocity.y, joyStick.Direction.y) * speed;
 
+        //Movement
         if (joyStick.Direction.magnitude > 0.001f)
         {
+            rb.velocity = new Vector3(joyStick.Direction.x, rb.velocity.y, joyStick.Direction.y) * speed;
             eulerDirection = Vector2.SignedAngle(joyStick.Direction, Vector2.up);
         }
         transform.rotation = Quaternion.Euler(0, eulerDirection , 0);
 
-        
     }
 
     public void OnInit(ColorType colorType)
@@ -47,12 +45,15 @@ public class Player : MonoBehaviour
 
     private void AddBrick()
     {
-
+        Brick brick = SimplePool.Spawn<Brick>(PoolType.Brick, Vector3.up * 0.5f * BrickStack.Count, Quaternion.identity, stackOffset);
+        brick.OnInit(myColor);
+        BrickStack.Push(brick.gameObject);
     }
 
     private void RemoveBrick()
     {
-
+        Brick brick = BrickStack.Pop().GetComponent<Brick>();
+        brick.OnDespawn();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -62,8 +63,8 @@ public class Player : MonoBehaviour
             Brick target = other.GetComponent<Brick>();
             if (myColor == target.BrickColor)
             {
-                Debug.Log("Collected");
                 target.OnDespawn();
+                AddBrick();
             }
         }
 

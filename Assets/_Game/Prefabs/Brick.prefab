@@ -49,6 +49,7 @@ MonoBehaviour:
   poolType: 5
   colorData: {fileID: 11400000, guid: 406c7602b4a422d429dbc58f7b700a30, type: 2}
   meshRenderer: {fileID: 706718804563127353}
+  brickColor: 3
 --- !u!65 &2783767865334992418
 BoxCollider:
   m_ObjectHideFlags: 0
