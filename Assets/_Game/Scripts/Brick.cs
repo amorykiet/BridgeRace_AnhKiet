@@ -8,12 +8,13 @@ public class Brick : GameUnit
     [SerializeField] private ColorData colorData;
     [SerializeField] private MeshRenderer meshRenderer;
 
-    private ColorType brickColor;
+    [SerializeField] private ColorType brickColor;
     public ColorType BrickColor => brickColor;
 
+    //Test
     private void Start()
     {
-        OnInit(ColorType.Red);
+        OnInit(brickColor);
     }
 
     public void OnInit(ColorType colorType)
