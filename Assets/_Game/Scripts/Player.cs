@@ -24,15 +24,19 @@ public class Player : MonoBehaviour
         OnInit(myColor);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
 
         //Movement
+
+        //Vector3 direction = Vector3.forward * joyStick.Vertical + Vector3.right * joyStick.Horizontal;
+        //rb.AddForce(direction * speed * Time.fixedDeltaTime, ForceMode.VelocityChange);
         if (joyStick.Direction.magnitude > 0.001f)
         {
-            rb.velocity = new Vector3(joyStick.Direction.x, rb.velocity.y, joyStick.Direction.y) * speed;
+            rb.velocity = new Vector3(joyStick.Direction.x, 0, joyStick.Direction.y) * speed;
             eulerDirection = Vector2.SignedAngle(joyStick.Direction, Vector2.up);
         }
+
         transform.rotation = Quaternion.Euler(0, eulerDirection , 0);
 
     }
