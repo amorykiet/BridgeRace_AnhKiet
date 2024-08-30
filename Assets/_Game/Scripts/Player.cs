@@ -13,10 +13,15 @@ public class Player : MonoBehaviour
     [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
     [SerializeField] private ColorType myColor;
     [SerializeField] private Transform stackOffset;
+    [SerializeField] private LayerMask groundMask;
+
+
     public ColorType ColorType => myColor;
-    
+
     private float eulerDirection = 0;
     private Stack<GameObject> BrickStack = new Stack<GameObject>();
+    private RaycastHit standingHit;
+    private bool grounded;
 
     //Test
     private void Start()
@@ -24,19 +29,39 @@ public class Player : MonoBehaviour
         OnInit(myColor);
     }
 
+    private void Update()
+    {
+        grounded = Physics.Raycast(transform.position, Vector3.down, 0.3f, groundMask);
+        
+        if (grounded)
+        {
+            rb.drag = 5f;
+        }
+        else
+        {
+            rb.drag = 0f;
+        }
+    }
     private void FixedUpdate()
     {
 
         //Movement
-
-        //Vector3 direction = Vector3.forward * joyStick.Vertical + Vector3.right * joyStick.Horizontal;
-        //rb.AddForce(direction * speed * Time.fixedDeltaTime, ForceMode.VelocityChange);
-        if (joyStick.Direction.magnitude > 0.001f)
+        Vector3 direction = new Vector3(joyStick.Direction.x, 0, joyStick.Direction.y).normalized;
+        if (grounded)
         {
-            rb.velocity = new Vector3(joyStick.Direction.x, 0, joyStick.Direction.y) * speed;
+            if (IsOnSlope())
+            {
+                direction = Vector3.ProjectOnPlane(direction, standingHit.normal);
+            }
+
+            rb.AddForce(direction * speed, ForceMode.Force);
+        }        
+        
+        if (direction.magnitude > 0.001f)
+        {
             eulerDirection = Vector2.SignedAngle(joyStick.Direction, Vector2.up);
         }
-
+        
         transform.rotation = Quaternion.Euler(0, eulerDirection , 0);
 
     }
@@ -58,6 +83,20 @@ public class Player : MonoBehaviour
     {
         Brick brick = BrickStack.Pop().GetComponent<Brick>();
         brick.OnDespawn();
+    }
+
+    private bool IsOnSlope()
+    {
+        if (Physics.Raycast(transform.position, Vector3.down, out standingHit, 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, standingHit.normal);
+            if (angle > 0.0001f && angle < 50.0f)
+            {
+                return true;
+            }
+
+        }
+        return false;
     }
 
     private void OnTriggerEnter(Collider other)
