@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     [SerializeField] private ColorType myColor;
     [SerializeField] private Transform stackOffset;
     [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask brickOnStairMask;
 
 
     public ColorType ColorType => myColor;
@@ -22,6 +23,22 @@ public class Player : MonoBehaviour
     private Stack<GameObject> BrickStack = new Stack<GameObject>();
     private RaycastHit standingHit;
     private bool grounded;
+    private RaycastHit hitBrickOnStair;
+    private bool canMoveUp = true;
+
+    private Transform tf;
+    public Transform TF
+    {
+        get
+        {
+            //tf = tf ?? gameObject.transform;
+            if (tf == null)
+            {
+                tf = transform;
+            }
+            return tf;
+        }
+    }
 
     //Test
     private void Start()
@@ -31,7 +48,10 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        grounded = Physics.Raycast(transform.position, Vector3.down, 0.3f, groundMask);
+        Debug.DrawLine(TF.position, TF.position + Vector3.down * 0.5f, Color.red);
+        
+        //Change Drag
+        grounded = Physics.Raycast(TF.position, Vector3.down, 0.3f, groundMask);
         
         if (grounded)
         {
@@ -41,28 +61,17 @@ public class Player : MonoBehaviour
         {
             rb.drag = 0f;
         }
+
+        //Collide brick on Stair
+        if(Physics.Raycast(TF.position, Vector3.forward, out hitBrickOnStair, 0.5f, brickOnStairMask))
+        {
+            StandOnBrickOnBridge();
+        }
     }
+
     private void FixedUpdate()
     {
-
-        //Movement
-        Vector3 direction = new Vector3(joyStick.Direction.x, 0, joyStick.Direction.y).normalized;
-        if (grounded)
-        {
-            if (IsOnSlope())
-            {
-                direction = Vector3.ProjectOnPlane(direction, standingHit.normal);
-            }
-
-            rb.AddForce(direction * speed, ForceMode.Force);
-        }        
-        
-        if (direction.magnitude > 0.001f)
-        {
-            eulerDirection = Vector2.SignedAngle(joyStick.Direction, Vector2.up);
-        }
-        
-        transform.rotation = Quaternion.Euler(0, eulerDirection , 0);
+        MoveWithJoyStick();
 
     }
 
@@ -87,7 +96,7 @@ public class Player : MonoBehaviour
 
     private bool IsOnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out standingHit, 0.3f))
+        if (Physics.Raycast(TF.position, Vector3.down, out standingHit, 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, standingHit.normal);
             if (angle > 0.0001f && angle < 50.0f)
@@ -99,6 +108,61 @@ public class Player : MonoBehaviour
         return false;
     }
 
+    private void StandOnBrickOnBridge()
+    {
+        BrickOnStair brick = hitBrickOnStair.collider.GetComponent<BrickOnStair>();
+        bool isMoveForward = Vector2.Angle(joyStick.Direction, Vector2.up) < 90f;
+
+        if (!isMoveForward || brick.IsSameColor(myColor))
+        {
+            if (!canMoveUp) canMoveUp = true;
+            return;
+        }
+
+        if (!brick.IsSameColor(myColor))
+        {
+            if (BrickStack.Count > 0)
+            {
+                brick.ChangeColor(myColor);
+                RemoveBrick();
+            }
+            else
+            {
+                canMoveUp = false;
+            }
+        }
+
+
+    }
+
+    private void MoveWithJoyStick()
+    {
+        //Movement
+        Vector3 direction = new Vector3(joyStick.Direction.x, 0, joyStick.Direction.y).normalized; ;
+        if (grounded)
+        {
+            if (IsOnSlope())
+            {
+                //Move on Slope
+                if (!canMoveUp && direction.z > 0)
+                {
+                    direction.z = 0;
+                }
+                direction = Vector3.ProjectOnPlane(direction, standingHit.normal).normalized;
+            }
+
+            rb.AddForce(direction * speed, ForceMode.Force);
+        }
+
+        //Rotation
+        if (joyStick.Direction.magnitude > 0.001f)
+        {
+            eulerDirection = Vector2.SignedAngle(joyStick.Direction, Vector2.up);
+        }
+
+        TF.rotation = Quaternion.Euler(0, eulerDirection, 0);
+
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Brick"))
