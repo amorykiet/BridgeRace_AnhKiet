@@ -316,6 +316,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8809860730914431638, guid: 270c91f3c0704f84898efd7a42e3c086, type: 3}
+      propertyPath: myColor
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8809860730914431638, guid: 270c91f3c0704f84898efd7a42e3c086, type: 3}
       propertyPath: joyStick
       value: 
       objectReference: {fileID: 1539833420}
@@ -1713,6 +1717,18 @@ PrefabInstance:
     - target: {fileID: 6122335858891869854, guid: 4553ed782af704c4f9b5ce4c00c93708, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7015028809716373411, guid: 4553ed782af704c4f9b5ce4c00c93708, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7015028809716373411, guid: 4553ed782af704c4f9b5ce4c00c93708, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8698322942501687568, guid: 4553ed782af704c4f9b5ce4c00c93708, type: 3}
+      propertyPath: verticalDistance
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
