@@ -83,7 +83,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 7015028809716373411}
-  spawnByAxis: {x: 5, y: 6}
+  spawnByAxis: {x: 6, y: 6}
+  colorNumber: 4
+  horizontalDistance: 3
+  verticalDistance: 3
 --- !u!1001 &804857524255641636
 PrefabInstance:
   m_ObjectHideFlags: 0
