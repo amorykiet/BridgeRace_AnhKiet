@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform stackOffset;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask brickOnStairMask;
+    [SerializeField] private Animator animator;
 
 
     public ColorType ColorType => myColor;
@@ -29,6 +30,8 @@ public class Player : MonoBehaviour
     private RaycastHit hitBrickOnStair;
     private bool canMoveUp = true;
     private int currentStage = 0;
+    private string currentAnim;
+    private bool stopMovement = false;
 
     private Transform tf;
     public Transform TF
@@ -75,8 +78,8 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (stopMovement) return;
         MoveWithJoyStick();
-
     }
 
     public void OnInit(ColorType colorType)
@@ -84,6 +87,7 @@ public class Player : MonoBehaviour
         myColor = colorType;
         skinnedMeshRenderer.material = colorData.GetMat(myColor);
         currentStage = 0;
+        stopMovement = false;
     }
 
     private void AddBrick()
@@ -97,6 +101,15 @@ public class Player : MonoBehaviour
     {
         Brick brick = BrickStack.Pop().GetComponent<Brick>();
         brick.OnDespawn();
+    }
+
+    private void ClearBrick()
+    {
+        while (BrickStack.Count > 0)
+        {
+            BrickStack.Pop().GetComponent<Brick>().OnDespawn();
+        }
+
     }
 
     private bool IsOnSlope()
@@ -160,14 +173,32 @@ public class Player : MonoBehaviour
         }
 
         //Rotation
-        if (joyStick.Direction.magnitude > 0.001f)
+        if (direction.magnitude > 0.001f)
         {
+            //anim set continous
+            ChangeAnim("run");
             eulerDirection = Vector2.SignedAngle(joyStick.Direction, Vector2.up);
+        }
+        else
+        {
+            ChangeAnim("idle");
         }
 
         TF.rotation = Quaternion.Euler(0, eulerDirection, 0);
 
     }
+
+    private void ChangeAnim(string anim)
+    {
+        if (currentAnim != null)
+        {
+            animator.ResetTrigger(currentAnim);
+        }
+        currentAnim = anim;
+        animator.SetTrigger(currentAnim);
+
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Brick"))
@@ -192,7 +223,9 @@ public class Player : MonoBehaviour
     {
         if (collision.collider.CompareTag("Winpos"))
         {
-            Debug.Log("Win");
+            ClearBrick();
+            ChangeAnim("dance");
+            stopMovement = true;
         }
     }
 }
