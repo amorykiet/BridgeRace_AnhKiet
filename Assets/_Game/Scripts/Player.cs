@@ -185,5 +185,14 @@ public class Player : MonoBehaviour
             onPlayerOpenDoor?.Invoke(++currentStage);
         }
 
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Winpos"))
+        {
+            Debug.Log("Win");
+        }
     }
 }

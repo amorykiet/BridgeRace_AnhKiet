@@ -17,7 +17,6 @@ public class BrickOnStair : MonoBehaviour
 
     public void OnInit()
     {
-        meshRenderer.enabled = false;
         colorType = ColorType.None;
     }
 
