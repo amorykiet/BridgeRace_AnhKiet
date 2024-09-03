@@ -1,4 +1,5 @@
 using Scriptable;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -6,6 +7,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static event Action<int> onPlayerOpenDoor;
+
     [SerializeField] private FixedJoystick joyStick;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float speed;
@@ -25,6 +28,7 @@ public class Player : MonoBehaviour
     private bool grounded;
     private RaycastHit hitBrickOnStair;
     private bool canMoveUp = true;
+    private int currentStage = 0;
 
     private Transform tf;
     public Transform TF
@@ -79,6 +83,7 @@ public class Player : MonoBehaviour
     {
         myColor = colorType;
         skinnedMeshRenderer.material = colorData.GetMat(myColor);
+        currentStage = 0;
     }
 
     private void AddBrick()
@@ -173,6 +178,11 @@ public class Player : MonoBehaviour
                 target.OnDespawn();
                 AddBrick();
             }
+        }
+        else if (other.CompareTag("Door"))
+        {
+            other.gameObject.SetActive(false);
+            onPlayerOpenDoor?.Invoke(++currentStage);
         }
 
     }

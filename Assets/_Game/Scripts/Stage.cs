@@ -15,12 +15,6 @@ public class Stage : MonoBehaviour
     private int MaxBricksPerColor => (int) spawnByAxis.x * (int) spawnByAxis.y / colorNumber;
     private Dictionary<ColorType, int> colorAvailableDict = new();
 
-    //Test
-    private void Start()
-    {
-        SpawnBrick();
-    }
-
     public void SpawnBrick()
     {
         //Not opt yet
