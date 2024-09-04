@@ -93,6 +93,26 @@ public class Bot : MonoBehaviour
         currentState.OnEnter(this);
     }
 
+    public void StandOnBrickOnBridge(RaycastHit hitBrickOnStair)
+    {
+        BrickOnStair brick = hitBrickOnStair.collider.GetComponent<BrickOnStair>();
+
+        if (!brick.IsSameColor(myColor))
+        {
+            if (BrickCollected > 0)
+            {
+                brick.ChangeColor(myColor);
+                RemoveBrick();
+            }
+            else
+            {
+                ChangeState(new PatrolState());
+            }
+        }
+
+
+    }
+
     public Stage GetStage()
     {
         return currentLevel.GetStage(currentStageIndex);
@@ -119,42 +139,42 @@ public class Bot : MonoBehaviour
         }
     }
 
-    public void StandOnBrickOnBridge(RaycastHit hitBrickOnStair)
+    private void CollideBrick(Collider other)
     {
-        BrickOnStair brick = hitBrickOnStair.collider.GetComponent<BrickOnStair>();
-
-        if (!brick.IsSameColor(myColor))
+        Brick target = other.GetComponent<Brick>();
+        if (myColor == target.BrickColor)
         {
-            if (BrickCollected > 0)
-            {
-                brick.ChangeColor(myColor);
-                RemoveBrick();
-            }
-            else
-            {
-                ChangeState(new PatrolState());
-            }
+            target.OnDespawn();
+            AddBrick();
         }
 
+    }
 
+    private void CollideDoor(Collider other)
+    {
+
+        other.gameObject.SetActive(false);
+        onBotOpenDoor?.Invoke(++currentStageIndex);
+        ChangeState(new PatrolState());
+    }
+
+    private void CollideWinPos()
+    {
+
+        ClearBrick();
+        ChangeAnim("dance");
+        stopMovement = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Brick"))
         {
-            Brick target = other.GetComponent<Brick>();
-            if (myColor == target.BrickColor)
-            {
-                target.OnDespawn();
-                AddBrick();
-            }
+            CollideBrick(other);
         }
         else if (other.CompareTag("Door"))
         {
-            other.gameObject.SetActive(false);
-            onBotOpenDoor?.Invoke(++currentStageIndex);
-            ChangeState(new PatrolState());
+            CollideDoor(other);
         }
 
 
@@ -164,9 +184,7 @@ public class Bot : MonoBehaviour
     {
         if (collision.collider.CompareTag("Winpos"))
         {
-            ClearBrick();
-            ChangeAnim("dance");
-            stopMovement = true;
+            CollideWinPos();
         }
     }
 

@@ -211,28 +211,40 @@ public class Player : MonoBehaviour
 
     }
 
-    private void Dance()
+    private void CollideWinPos()
     {
         ClearBrick();
         ChangeAnim("dance");
         stopMovement = true;
     }
 
+    private void CollideBrick(Collider other)
+    {
+        Brick target = other.GetComponent<Brick>();
+        if (myColor == target.BrickColor)
+        {
+            target.OnDespawn();
+            AddBrick();
+        }
+
+    }
+
+    private void CollideDoor(Collider other)
+    {
+        other.gameObject.SetActive(false);
+        onPlayerOpenDoor?.Invoke(++currentStageIndex);
+
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Brick"))
         {
-            Brick target = other.GetComponent<Brick>();
-            if (myColor == target.BrickColor)
-            {
-                target.OnDespawn();
-                AddBrick();
-            }
+            CollideBrick(other);
         }
         else if (other.CompareTag("Door"))
         {
-            other.gameObject.SetActive(false);
-            onPlayerOpenDoor?.Invoke(++currentStageIndex);
+            CollideDoor(other);
         }
 
 
@@ -242,7 +254,7 @@ public class Player : MonoBehaviour
     {
         if (collision.collider.CompareTag("Winpos"))
         {
-            Dance();
+            CollideWinPos();
         }
     }
 
