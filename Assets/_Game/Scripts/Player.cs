@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     private bool grounded;
     private RaycastHit hitBrickOnStair;
     private bool canMoveUp = true;
-    private int currentStage = 0;
+    private int currentStageIndex = 0;
     private string currentAnim;
     private bool stopMovement = false;
 
@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
     {
         myColor = colorType;
         skinnedMeshRenderer.material = colorData.GetMat(myColor);
-        currentStage = 0;
+        currentStageIndex = 0;
         stopMovement = false;
     }
 
@@ -232,7 +232,7 @@ public class Player : MonoBehaviour
         else if (other.CompareTag("Door"))
         {
             other.gameObject.SetActive(false);
-            onPlayerOpenDoor?.Invoke(++currentStage);
+            onPlayerOpenDoor?.Invoke(++currentStageIndex);
         }
 
 

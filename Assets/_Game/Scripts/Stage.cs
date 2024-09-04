@@ -12,7 +12,8 @@ public class Stage : MonoBehaviour
     [SerializeField] private float horizontalDistance;
     [SerializeField] private float verticalDistance;
 
-    private int MaxBricksPerColor => (int) spawnByAxis.x * (int) spawnByAxis.y / colorNumber;
+    public int MaxBricksPerColor => (int) spawnByAxis.x * (int) spawnByAxis.y / colorNumber;
+
     private Dictionary<ColorType, int> colorAvailableDict = new();
 
     public void SpawnBrick()
@@ -38,5 +39,13 @@ public class Stage : MonoBehaviour
 
             }
         }
+    }
+
+    public Vector3 GetRandomBrickPosition()
+    {
+        int x = Random.Range(0, (int)spawnByAxis.x) * (int)horizontalDistance;
+        int y = Random.Range(0, (int)spawnByAxis.y) * (int)verticalDistance;
+        Vector3 randomPosition = spawnPoint.position + new Vector3(x, 0, y);
+        return randomPosition;
     }
 }

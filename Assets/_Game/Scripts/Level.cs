@@ -16,10 +16,11 @@ public class Level : MonoBehaviour
 
     private void OnEnable()
     {
-        Player.onPlayerOpenDoor += OnPlayerOpenDoor;
+        Player.onPlayerOpenDoor += OnOpenDoor;
+        Bot.onBotOpenDoor += OnOpenDoor;
     }
 
-    private void OnPlayerOpenDoor(int currentStage)
+    private void OnOpenDoor(int currentStage)
     {
         if (this.currentStage >= currentStage)
         {
@@ -34,5 +35,9 @@ public class Level : MonoBehaviour
         stageList[currentStage].SpawnBrick();
     }
 
+    public Stage GetStage(int stage)
+    {
+        return stageList[stage];
+    }
 
 }

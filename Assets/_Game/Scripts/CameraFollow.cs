@@ -9,34 +9,26 @@ public class CameraFollow : MonoBehaviour
     public Vector3 offset;
     public float speed;
 
-    private bool following;
 
     //Test Set Follow
     private void Start()
     {
-        SetFollow(true);    
+        //Test
+        FollowToTarget(FindAnyObjectByType<Player>().TF);    
     }
 
     // Update is called once per frame
     private void LateUpdate()
     {
-
-        if (!following) return;
-        transform.position = Vector3.Lerp(transform.position, target.position + offset, Time.fixedDeltaTime * speed);
+        if (Vector3.Distance(target.position, transform.position) > 0.001f)
+        {
+            transform.position = Vector3.Lerp(transform.position, target.position + offset, Time.fixedDeltaTime * speed);
+        }
     }
 
-    public void SetFollow(bool follow)
+    public void FollowToTarget(Transform target)
     {
-        following = follow;
-        if (follow)
-        {
-            target = FindObjectOfType<Player>().transform;
-        }
-        else
-        {
-            target = transform;
-        }
-
+        this.target = target;
     }
 
 }

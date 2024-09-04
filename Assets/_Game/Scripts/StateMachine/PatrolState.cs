@@ -1,26 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PatrolState : BaseState<Bot>
 {
+
     public override void OnEnter(Bot owner)
     {
-
+        Debug.Log("On Patrol");
+        owner.ChangeAnim("run");
+        owner.agent.SetDestination(owner.GetStage().GetRandomBrickPosition());
     }
 
     public override void OnExcute(Bot owner)
     {
-        // neu ma vuot so luong gach can thiet de di xay cau
-        // thi se xay cau
-        if (owner.IsEnoughBrickToBuild())
+        if(owner.BrickCollected >= owner.GetStage().MaxBricksPerColor)
         {
-            // di xay cau
-
+            owner.ChangeState(new BuildState());
         }
-        else
+
+        if(owner.agent.pathStatus == NavMeshPathStatus.PathComplete && owner.agent.remainingDistance == 0)
         {
-            // nhat gach tiep
+            if(Random.Range(0,5) != 0)
+            {
+                owner.ChangeState(new IdleState());
+            }
+            else
+            {
+                owner.ChangeState(new BuildState());
+            }
         }
     }
 
