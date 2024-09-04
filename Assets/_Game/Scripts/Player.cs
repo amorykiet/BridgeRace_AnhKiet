@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask brickOnStairMask;
     [SerializeField] private Animator animator;
-
+    [SerializeField] private Transform winPos;
 
     public ColorType ColorType => myColor;
 
@@ -57,6 +57,13 @@ public class Player : MonoBehaviour
     {
         Debug.DrawLine(TF.position, TF.position + Vector3.down * 0.5f, Color.red);
         
+        //Stop move after win
+        if (stopMovement)
+        {
+            tf.position = winPos.position;
+            tf.rotation = winPos.rotation;
+            return;
+        }
         //Change Drag
         grounded = Physics.Raycast(TF.position, Vector3.down, 0.3f, groundMask);
         
@@ -78,7 +85,12 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (stopMovement) return;
+        if (stopMovement)
+        {
+            tf.position = winPos.position;
+            tf.rotation = winPos.rotation;
+            return;
+        }
         MoveWithJoyStick();
     }
 
@@ -199,6 +211,13 @@ public class Player : MonoBehaviour
 
     }
 
+    private void Dance()
+    {
+        ClearBrick();
+        ChangeAnim("dance");
+        stopMovement = true;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Brick"))
@@ -223,9 +242,8 @@ public class Player : MonoBehaviour
     {
         if (collision.collider.CompareTag("Winpos"))
         {
-            ClearBrick();
-            ChangeAnim("dance");
-            stopMovement = true;
+            Dance();
         }
     }
+
 }
