@@ -163,7 +163,6 @@ public class Bot : MonoBehaviour
 
     private void CollideWinPos()
     {
-
         ClearBrick();
         ChangeAnim("dance");
         stopMovement = true;

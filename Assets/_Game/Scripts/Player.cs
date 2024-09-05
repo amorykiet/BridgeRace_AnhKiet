@@ -60,8 +60,6 @@ public class Player : MonoBehaviour
         //Stop move after win
         if (stopMovement)
         {
-            tf.position = winPos.position;
-            tf.rotation = winPos.rotation;
             return;
         }
         //Change Drag
@@ -87,9 +85,6 @@ public class Player : MonoBehaviour
     {
         if (stopMovement)
         {
-            //Go to win pos
-            tf.position = winPos.position;
-            tf.rotation = winPos.rotation;
             return;
         }
         MoveWithJoyStick();
@@ -214,6 +209,9 @@ public class Player : MonoBehaviour
 
     private void CollideWinPos()
     {
+        //Go to win pos
+        tf.position = winPos.position;
+        tf.rotation = winPos.rotation;
         ClearBrick();
         ChangeAnim("dance");
         stopMovement = true;
