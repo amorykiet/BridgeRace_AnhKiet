@@ -87,6 +87,7 @@ public class Player : MonoBehaviour
     {
         if (stopMovement)
         {
+            //Go to win pos
             tf.position = winPos.position;
             tf.rotation = winPos.rotation;
             return;
@@ -231,9 +232,17 @@ public class Player : MonoBehaviour
 
     private void CollideDoor(Collider other)
     {
-        other.gameObject.SetActive(false);
-        onPlayerOpenDoor?.Invoke(++currentStageIndex);
 
+        Door door = other.GetComponent<Door>();
+        if (currentStageIndex < door.stageToOpenIndex)
+        {
+            currentStageIndex = door.stageToOpenIndex;
+            onPlayerOpenDoor?.Invoke(currentStageIndex);
+        }
+        else
+        {
+
+        }
     }
 
     private void OnTriggerEnter(Collider other)

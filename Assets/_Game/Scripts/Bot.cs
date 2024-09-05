@@ -152,10 +152,13 @@ public class Bot : MonoBehaviour
 
     private void CollideDoor(Collider other)
     {
-
-        other.gameObject.SetActive(false);
-        onBotOpenDoor?.Invoke(++currentStageIndex);
-        ChangeState(new PatrolState());
+        Door door = other.GetComponent<Door>();
+        if(currentStageIndex < door.stageToOpenIndex)
+        {
+            currentStageIndex = door.stageToOpenIndex;
+            onBotOpenDoor?.Invoke(currentStageIndex);
+            ChangeState(new PatrolState());
+        }
     }
 
     private void CollideWinPos()
