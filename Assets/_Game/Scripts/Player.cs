@@ -8,6 +8,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public static event Action<int> onPlayerOpenDoor;
+    public static event Action onPlayerWin;
 
     [SerializeField] private FixedJoystick joyStick;
     [SerializeField] private Rigidbody rb;
@@ -215,6 +216,7 @@ public class Player : MonoBehaviour
         ClearBrick();
         ChangeAnim("dance");
         stopMovement = true;
+        onPlayerWin?.Invoke();
     }
 
     private void CollideBrick(Collider other)
@@ -253,8 +255,6 @@ public class Player : MonoBehaviour
         {
             CollideDoor(other);
         }
-
-
     }
 
     private void OnCollisionEnter(Collision collision)

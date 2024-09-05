@@ -6,6 +6,8 @@ using UnityEngine;
 public class Level : MonoBehaviour
 {
     [SerializeField] private List<Stage> stageList = new();
+    [SerializeField] private CameraFollow cam;
+    [SerializeField] private Transform winPos;
 
     private int currentStage = 0;
 
@@ -17,7 +19,20 @@ public class Level : MonoBehaviour
     private void OnEnable()
     {
         Player.onPlayerOpenDoor += OnOpenDoor;
+        Player.onPlayerWin += OnWin;
         Bot.onBotOpenDoor += OnOpenDoor;
+        Bot.onBotWin += OnWin;
+    }
+
+
+    public Stage GetStage(int stage)
+    {
+        return stageList[stage];
+    }
+
+    private void OnWin()
+    {
+        cam.FollowToTarget(winPos);
     }
 
     private void OnOpenDoor(int currentStage)
@@ -32,12 +47,8 @@ public class Level : MonoBehaviour
 
     public void OnInit()
     {
+        cam = FindAnyObjectByType<CameraFollow>();
         stageList[currentStage].SpawnBrick();
-    }
-
-    public Stage GetStage(int stage)
-    {
-        return stageList[stage];
     }
 
 }

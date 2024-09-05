@@ -10,6 +10,7 @@ public class Bot : MonoBehaviour
 {
 
     public static event Action<int> onBotOpenDoor;
+    public static event Action onBotWin;
 
     public NavMeshAgent agent;
     public Transform winPos;
@@ -166,6 +167,7 @@ public class Bot : MonoBehaviour
         ClearBrick();
         ChangeAnim("dance");
         stopMovement = true;
+        onBotWin?.Invoke();
     }
 
     private void OnTriggerEnter(Collider other)
