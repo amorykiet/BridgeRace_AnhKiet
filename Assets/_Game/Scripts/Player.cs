@@ -9,8 +9,9 @@ public class Player : MonoBehaviour
 {
     public static event Action<int> onPlayerOpenDoor;
     public static event Action onPlayerWin;
+    public FixedJoystick joyStick;
+    public Transform winPos;
 
-    [SerializeField] private FixedJoystick joyStick;
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float speed;
     [SerializeField] private ColorData colorData;
@@ -20,7 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask brickOnStairMask;
     [SerializeField] private Animator animator;
-    [SerializeField] private Transform winPos;
+
 
     public ColorType ColorType => myColor;
 
@@ -48,11 +49,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    //Test
-    private void Start()
-    {
-        OnInit(myColor);
-    }
 
     private void Update()
     {

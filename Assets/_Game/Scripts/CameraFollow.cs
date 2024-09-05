@@ -9,14 +9,6 @@ public class CameraFollow : MonoBehaviour
     public Vector3 offset;
     public float speed;
 
-
-    //Test Set Follow
-    private void Start()
-    {
-        //Test
-        FollowToTarget(FindAnyObjectByType<Player>().TF);    
-    }
-
     // Update is called once per frame
     private void LateUpdate()
     {

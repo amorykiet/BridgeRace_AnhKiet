@@ -48,4 +48,5 @@ public class Stage : MonoBehaviour
         Vector3 randomPosition = spawnPoint.position + new Vector3(x, 0, y);
         return randomPosition;
     }
+
 }

@@ -54,12 +54,6 @@ public class Bot : MonoBehaviour
         }
     }
 
-    //Test
-    private void Start()
-    {
-        OnInit(myColor);
-    }
-
     private void Update()
     {
         if (stopMovement) return;

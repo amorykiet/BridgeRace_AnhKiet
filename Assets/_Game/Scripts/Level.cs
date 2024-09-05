@@ -1,3 +1,4 @@
+using Scriptable;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,16 +6,17 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
+    public Transform winPos;
+
     [SerializeField] private List<Stage> stageList = new();
     [SerializeField] private CameraFollow cam;
-    [SerializeField] private Transform winPos;
+    [SerializeField] private Transform startPos;
+    [SerializeField] private ColorData colorData;
+    [SerializeField] private int colorNumber = 4;
 
+
+    public Dictionary<ColorType, Vector3> characterPosDictionary = new();
     private int currentStage = 0;
-
-    private void Start()
-    {
-        OnInit();
-    }
 
     private void OnEnable()
     {
@@ -49,6 +51,13 @@ public class Level : MonoBehaviour
     {
         cam = FindAnyObjectByType<CameraFollow>();
         stageList[currentStage].SpawnBrick();
+
+        for (int i = 0; i < colorNumber; i++)
+        {
+            characterPosDictionary.Add((ColorType)(i + 1), startPos.transform.position + Vector3.right * 4 * i);
+        }
+
     }
+
 
 }

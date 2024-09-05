@@ -8,7 +8,6 @@ public class PatrolState : BaseState<Bot>
 
     public override void OnEnter(Bot owner)
     {
-        Debug.Log("On Patrol");
         owner.ChangeAnim("run");
         owner.agent.SetDestination(owner.GetStage().GetRandomBrickPosition());
     }

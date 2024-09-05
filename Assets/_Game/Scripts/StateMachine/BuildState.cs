@@ -8,7 +8,6 @@ public class BuildState : BaseState<Bot>
 
     public override void OnEnter(Bot owner)
     {
-        Debug.Log("On Buid");
         owner.ChangeAnim("run");
         owner.agent.SetDestination(owner.winPos.position);
     }

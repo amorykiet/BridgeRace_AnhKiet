@@ -12,7 +12,6 @@ public class IdleState : BaseState<Bot>
 
     public override void OnEnter(Bot owner)
     {
-        Debug.Log("On Idle");
         owner.ChangeAnim("idle");
         timeToPatrol = Random.Range(MinTimeToPatrol, MaxTimeToPatrol);
         timeCount = 0;
