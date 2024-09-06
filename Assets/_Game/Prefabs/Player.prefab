@@ -50,8 +50,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joyStick: {fileID: 0}
+  winPos: {fileID: 0}
   rb: {fileID: 1359520465823660049}
-  speed: 50
+  speed: 40
   colorData: {fileID: 11400000, guid: 406c7602b4a422d429dbc58f7b700a30, type: 2}
   skinnedMeshRenderer: {fileID: 5785478884045233692}
   myColor: 2
@@ -63,7 +64,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   animator: {fileID: 1385500241402533742}
-  winPos: {fileID: 0}
 --- !u!54 &1359520465823660049
 Rigidbody:
   m_ObjectHideFlags: 0

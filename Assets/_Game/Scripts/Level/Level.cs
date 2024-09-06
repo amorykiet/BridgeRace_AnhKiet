@@ -21,9 +21,9 @@ public class Level : MonoBehaviour
     private void OnEnable()
     {
         Player.onPlayerOpenDoor += OnOpenDoor;
-        Player.onPlayerWin += OnWin;
+        Player.onPlayerWin += OnFinish;
         Bot.onBotOpenDoor += OnOpenDoor;
-        Bot.onBotWin += OnWin;
+        Bot.onBotWin += OnFinish;
     }
 
 
@@ -32,7 +32,7 @@ public class Level : MonoBehaviour
         return stageList[stage];
     }
 
-    private void OnWin()
+    private void OnFinish()
     {
         cam.FollowToTarget(winPos);
     }

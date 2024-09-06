@@ -5,15 +5,14 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>
 {
-    public static LevelManager Instance;
+    public FixedJoystick joystick;
 
     [SerializeField] private List<Level> Levels = new();
     [SerializeField] private Player player;
     [SerializeField] private Bot bot;
     [SerializeField] private CameraFollow cam;
-    [SerializeField] private FixedJoystick joystick;
 
     private List<Level> currentLevelList = new();
     private List<Player> currentPlayerList = new();
@@ -25,17 +24,9 @@ public class LevelManager : MonoBehaviour
     private void OnEnable()
     {
         Player.onPlayerWin += CompleteLevel;
+        Bot.onBotWin += FailLevel;
     }
 
-    private void Awake()
-    {
-        Instance = this;
-    }
-
-    private void Start()
-    {
-        OnInit();
-    }
     public void OnInit()
     {
         if (PlayerPrefs.HasKey("currentLevel"))
@@ -48,15 +39,6 @@ public class LevelManager : MonoBehaviour
         }
 
         LoadLevel();
-    }
-
-    public void CompleteLevel()
-    {
-        if (currentLevel < Levels.Count - 1)
-        {
-            currentLevel++;
-        }
-        PlayerPrefs.SetInt("currentLevel", currentLevel);
     }
 
     public void LoadLevel()
@@ -110,6 +92,8 @@ public class LevelManager : MonoBehaviour
 
     public void ClearLevel()
     {
+        cam.FollowToTarget(cam.transform);
+        SimplePool.CollectAll();
         foreach (var level in currentLevelList)
         {
             Destroy(level.gameObject);
@@ -124,10 +108,50 @@ public class LevelManager : MonoBehaviour
         {
             Destroy(bot.gameObject);
         }
-        cam.FollowToTarget(cam.transform);
         currentLevelList.Clear();
         currentPlayerList.Clear();
         currentBotList.Clear();
     }
 
+    private void StopCharacterMove()
+    {
+        foreach (Player player in currentPlayerList)
+        {
+            player.Stop();
+        }
+
+        foreach (Bot bot in currentBotList)
+        {
+            bot.Stop();
+        }
+
+    }
+
+    private void CompleteLevel()
+    {
+        if (currentLevel < Levels.Count - 1)
+        {
+            currentLevel++;
+        }
+        PlayerPrefs.SetInt("currentLevel", currentLevel);
+        StopCharacterMove();
+        Invoke(nameof(ChangeCanvasToWin), 2);
+        GameManager.ChangeState(GameState.Finish);
+    }
+
+    private void FailLevel()
+    {
+        StopCharacterMove();
+        Invoke(nameof(ChangeCanvasToLose), 2);
+        GameManager.ChangeState(GameState.Finish);
+    }
+
+    private void ChangeCanvasToWin()
+    {
+        UIManager.Ins.GetUI<CanvasGamePlay>().PlayerWin();
+    }
+    private void ChangeCanvasToLose()
+    {
+        UIManager.Ins.GetUI<CanvasGamePlay>().PlayerLose();
+    }
 }

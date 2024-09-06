@@ -113,6 +113,11 @@ public class Bot : MonoBehaviour
         return currentLevel.GetStage(currentStageIndex);
     }
 
+    public void Stop()
+    {
+        stopMovement = true;
+    }
+
     private void AddBrick()
     {
         Brick brick = SimplePool.Spawn<Brick>(PoolType.Brick, Vector3.up * 0.5f * BrickCollected, Quaternion.identity, stackOffset);
@@ -160,7 +165,7 @@ public class Bot : MonoBehaviour
     {
         ClearBrick();
         ChangeAnim("dance");
-        stopMovement = true;
+        Stop();
         onBotWin?.Invoke();
     }
 

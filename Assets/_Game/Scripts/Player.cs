@@ -87,6 +87,11 @@ public class Player : MonoBehaviour
         MoveWithJoyStick();
     }
 
+    public void Stop()
+    {
+        stopMovement = true;
+    }
+
     public void OnInit(ColorType colorType)
     {
         myColor = colorType;
@@ -161,7 +166,7 @@ public class Player : MonoBehaviour
     private void MoveWithJoyStick()
     {
         //Movement
-        Vector3 direction = new Vector3(joyStick.Direction.x, 0, joyStick.Direction.y).normalized; ;
+        Vector3 direction = new Vector3(joyStick.Direction.x, 0, joyStick.Direction.y).normalized;
         if (grounded)
         {
             if (IsOnSlope())
@@ -211,7 +216,7 @@ public class Player : MonoBehaviour
         tf.rotation = winPos.rotation;
         ClearBrick();
         ChangeAnim("dance");
-        stopMovement = true;
+        Stop();
         onPlayerWin?.Invoke();
     }
 
