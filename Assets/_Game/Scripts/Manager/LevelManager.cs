@@ -27,6 +27,13 @@ public class LevelManager : Singleton<LevelManager>
         Bot.onBotWin += FailLevel;
     }
 
+    private void OnDisable()
+    {
+        Player.onPlayerWin -= CompleteLevel;
+        Bot.onBotWin -= FailLevel;
+
+    }
+
     public void OnInit()
     {
         if (PlayerPrefs.HasKey("currentLevel"))
