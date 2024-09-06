@@ -240,10 +240,6 @@ public class Player : MonoBehaviour
             currentStageIndex = door.stageToOpenIndex;
             onPlayerOpenDoor?.Invoke(currentStageIndex);
         }
-        else
-        {
-
-        }
     }
 
     private void OnTriggerEnter(Collider other)

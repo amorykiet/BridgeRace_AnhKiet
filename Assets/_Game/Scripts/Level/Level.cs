@@ -8,7 +8,7 @@ public class Level : MonoBehaviour
 {
     public Transform winPos;
 
-    [SerializeField] private List<Stage> stageList = new();
+    [SerializeField] private List<Stage> stageList;
     [SerializeField] private CameraFollow cam;
     [SerializeField] private Transform startPos;
     [SerializeField] private ColorData colorData;
@@ -26,6 +26,19 @@ public class Level : MonoBehaviour
         Bot.onBotWin += OnFinish;
     }
 
+    private void OnDisable()
+    {
+        Player.onPlayerOpenDoor -= OnOpenDoor;
+        Player.onPlayerWin -= OnFinish;
+        Bot.onBotOpenDoor -= OnOpenDoor;
+        Bot.onBotWin -= OnFinish;
+
+    }
+
+    private void Start()
+    {
+        Debug.Log("Number of stages: " + stageList.Count);
+    }
 
     public Stage GetStage(int stage)
     {
@@ -39,12 +52,13 @@ public class Level : MonoBehaviour
 
     private void OnOpenDoor(int currentStage)
     {
+        Debug.Log("Level have" + this.stageList.Count + " stages now");
         if (this.currentStage >= currentStage)
         {
             return;
         }
         this.currentStage = currentStage;
-        stageList[currentStage].SpawnBrick();
+        stageList[this.currentStage].SpawnBrick();
     }
 
     public void OnInit()

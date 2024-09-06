@@ -38,11 +38,12 @@ public class LevelManager : Singleton<LevelManager>
             currentLevel = 0;
         }
 
-        LoadLevel();
+        LoadLevel(currentLevel);
     }
 
-    public void LoadLevel()
+    public void ReloadLevel()
     {
+        ClearLevel();
         LoadLevel(currentLevel);
     }
 
@@ -79,7 +80,7 @@ public class LevelManager : Singleton<LevelManager>
 
     }
 
-    public void ReloadLevel()
+    public void LoadNextLevel()
     {
         ClearLevel();
         if (currentLevel == Levels.Count - 1)
@@ -87,7 +88,7 @@ public class LevelManager : Singleton<LevelManager>
             LoadLevel(currentLevel);
             return;
         }
-        LoadLevel(--currentLevel);
+        LoadLevel(++currentLevel);
     }
 
     public void ClearLevel()
@@ -129,10 +130,6 @@ public class LevelManager : Singleton<LevelManager>
 
     private void CompleteLevel()
     {
-        if (currentLevel < Levels.Count - 1)
-        {
-            currentLevel++;
-        }
         PlayerPrefs.SetInt("currentLevel", currentLevel);
         StopCharacterMove();
         Invoke(nameof(ChangeCanvasToWin), 2);
