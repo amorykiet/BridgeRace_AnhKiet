@@ -35,11 +35,6 @@ public class Level : MonoBehaviour
 
     }
 
-    private void Start()
-    {
-        Debug.Log("Number of stages: " + stageList.Count);
-    }
-
     public Stage GetStage(int stage)
     {
         return stageList[stage];
@@ -52,7 +47,6 @@ public class Level : MonoBehaviour
 
     private void OnOpenDoor(int currentStage)
     {
-        Debug.Log("Level have" + this.stageList.Count + " stages now");
         if (this.currentStage >= currentStage)
         {
             return;

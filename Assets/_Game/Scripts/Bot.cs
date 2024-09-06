@@ -117,7 +117,6 @@ public class Bot : MonoBehaviour
     {
         stopMovement = true;
         agent.isStopped = true;
-        ChangeAnim("idle");
     }
 
     private void AddBrick()

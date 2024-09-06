@@ -2,6 +2,7 @@ using Scriptable;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -137,7 +138,10 @@ public class LevelManager : Singleton<LevelManager>
 
     private void CompleteLevel()
     {
-        PlayerPrefs.SetInt("currentLevel", currentLevel);
+        if(currentLevel <  Levels.Count - 1)
+        {
+            PlayerPrefs.SetInt("currentLevel", currentLevel + 1);
+        }
         StopCharacterMove();
         Invoke(nameof(ChangeCanvasToWin), 2);
         GameManager.ChangeState(GameState.Finish);
