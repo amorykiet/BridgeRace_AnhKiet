@@ -225,7 +225,7 @@ public class Player : MonoBehaviour
         Brick target = other.GetComponent<Brick>();
         if (myColor == target.BrickColor)
         {
-            target.OnDespawn();
+            target.OnDespawnToSpawn();
             AddBrick();
         }
 
