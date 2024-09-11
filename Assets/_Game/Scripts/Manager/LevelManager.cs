@@ -156,6 +156,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         cam.FollowToTarget(cam.transform);
         SimplePool.CollectAll();
+
         foreach (var level in levelList)
         {
             Destroy(level.gameObject);

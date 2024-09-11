@@ -17,7 +17,6 @@ public class Brick : GameUnit
     private float timeCount = 0;
     private bool counting = false;
 
-
     private void Update()
     {
         if (!counting) { return; }
@@ -35,6 +34,8 @@ public class Brick : GameUnit
 
     public void OnInit(ColorType colorType)
     {
+        Activate();
+        counting = false;
         brickColor = colorType;
         meshRenderer.material = colorData.GetMat(brickColor);
     }
