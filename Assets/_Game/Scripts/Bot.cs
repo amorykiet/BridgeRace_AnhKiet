@@ -9,7 +9,7 @@ using static UnityEngine.UI.GridLayoutGroup;
 public class Bot : MonoBehaviour
 {
 
-    public static event Action<int> onBotOpenDoor;
+    public static event Action<int, ColorType> onBotOpenDoor;
     public static event Action onBotWin;
 
     public NavMeshAgent agent;
@@ -145,7 +145,7 @@ public class Bot : MonoBehaviour
         Brick target = other.GetComponent<Brick>();
         if (myColor == target.BrickColor)
         {
-            target.OnDespawn();
+            target.OnDespawnToSpawn();
             AddBrick();
         }
 
@@ -157,7 +157,7 @@ public class Bot : MonoBehaviour
         if(currentStageIndex < door.stageToOpenIndex)
         {
             currentStageIndex = door.stageToOpenIndex;
-            onBotOpenDoor?.Invoke(currentStageIndex);
+            onBotOpenDoor?.Invoke(currentStageIndex, myColor);
             ChangeState(new PatrolState());
         }
     }

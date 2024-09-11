@@ -27,7 +27,8 @@ public class Brick : GameUnit
         }
         else
         {
-            OnSpawn();
+            counting = false;
+            Activate();
         }
     }
 
@@ -52,11 +53,16 @@ public class Brick : GameUnit
         SimplePool.Despawn(this);
     }
 
-    private void OnSpawn()
+    public void Activate()
     {
-        counting = false;
         brickCollider.enabled = true;
         renderObject.SetActive(true);
+    }
+
+    public void DeActivate()
+    {
+        brickCollider.enabled = false;
+        renderObject.SetActive(false);
     }
 
 }

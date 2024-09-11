@@ -16,7 +16,6 @@ public class Level : MonoBehaviour
 
 
     public Dictionary<ColorType, Vector3> characterPosDictionary = new();
-    private int currentStage = 0;
 
     private void OnEnable()
     {
@@ -45,20 +44,20 @@ public class Level : MonoBehaviour
         cam.FollowToTarget(winPos);
     }
 
-    private void OnOpenDoor(int currentStage)
+    private void OnOpenDoor(int currentStage, ColorType color)
     {
-        if (this.currentStage >= currentStage)
-        {
-            return;
-        }
-        this.currentStage = currentStage;
-        stageList[this.currentStage].SpawnBrick();
+        //if (this.currentStage > currentStage)
+        //{
+        //    return;
+        //}
+        //this.currentStage = currentStage;
+        stageList[currentStage].SpawnBrickByColor(color);
     }
 
     public void OnInit()
     {
         cam = FindAnyObjectByType<CameraFollow>();
-        stageList[currentStage].SpawnBrick();
+        stageList[0].SpawnBrick();
 
         for (int i = 0; i < colorNumber; i++)
         {

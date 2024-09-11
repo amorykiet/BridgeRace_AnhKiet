@@ -1,6 +1,7 @@
 using Scriptable;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
@@ -16,9 +17,10 @@ public class Stage : MonoBehaviour
 
     private Dictionary<ColorType, int> colorAvailableDict = new();
 
+    private List<Brick> brickList = new();
+
     public void SpawnBrick()
     {
-        //Not opt yet
         for (int i = 0; i < colorNumber; i++)
         {
             // Carefull when ColorType enum is changed
@@ -35,8 +37,39 @@ public class Stage : MonoBehaviour
                 {
                     colorAvailableDict.Remove(randomColor);
                 }
-                SimplePool.Spawn<Brick>(PoolType.Brick, spawnPoint.position + new Vector3(i*horizontalDistance, 0, j*verticalDistance), spawnPoint.rotation).OnInit(randomColor);
+                Brick temp = SimplePool.Spawn<Brick>(PoolType.Brick, spawnPoint.position + new Vector3(i*horizontalDistance, 0, j*verticalDistance), spawnPoint.rotation);
+                temp.OnInit(randomColor);
+                brickList.Add(temp);
+            }
+        }
+    }
 
+    public void SpawnDeactiveBrick()
+    {
+        if (brickList.Count <= 0)
+        {
+            SpawnBrick();
+        }
+
+        foreach (Brick brick in brickList)
+        {
+            brick.DeActivate();
+        }
+
+    }
+    
+    public void SpawnBrickByColor(ColorType color)
+    {
+        if (brickList.Count <= 0)
+        {
+            SpawnDeactiveBrick();
+        }
+
+        foreach (Brick brick in brickList)
+        {
+            if(brick.BrickColor == color)
+            {
+                brick.Activate();
             }
         }
     }

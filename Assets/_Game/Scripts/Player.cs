@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public static event Action<int> onPlayerOpenDoor;
+    public static event Action<int, ColorType> onPlayerOpenDoor;
     public static event Action onPlayerWin;
     public FixedJoystick joyStick;
     public Transform winPos;
@@ -238,7 +238,7 @@ public class Player : MonoBehaviour
         if (currentStageIndex < door.stageToOpenIndex)
         {
             currentStageIndex = door.stageToOpenIndex;
-            onPlayerOpenDoor?.Invoke(currentStageIndex);
+            onPlayerOpenDoor?.Invoke(currentStageIndex, myColor);
         }
     }
 
