@@ -24,7 +24,6 @@ public class CanvasVictory : UICanvas
 
     public void Retry()
     {
-        Debug.Log("Press Retry");
         LevelManager.Ins.ReloadLevel();
         UIManager.Ins.CloseAll();
         UIManager.Ins.OpenUI<CanvasGamePlay>();

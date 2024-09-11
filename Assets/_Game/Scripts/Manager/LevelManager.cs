@@ -15,24 +15,69 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField] private Bot bot;
     [SerializeField] private CameraFollow cam;
 
-    private List<Level> currentLevelList = new();
-    private List<Player> currentPlayerList = new();
-    private List<Bot> currentBotList = new();
+    private List<Level> levelList = new();
+    private List<Character> characterList = new();
 
     private int currentLevel;
 
     
     private void OnEnable()
     {
-        Player.onPlayerWin += CompleteLevel;
-        Bot.onBotWin += FailLevel;
+        Character.onWin += CompleteLevel;
     }
 
     private void OnDisable()
     {
-        Player.onPlayerWin -= CompleteLevel;
-        Bot.onBotWin -= FailLevel;
+        Character.onWin -= CompleteLevel;
+    }
 
+    private void StopCharacterMove()
+    {
+        foreach (Character character in characterList)
+        {
+            character.Stop();
+        }
+
+    }
+
+    private void CompleteLevel(Character character)
+    {
+        if (character is Player)
+        {
+            WinLevel();
+        }
+        else if (character is Bot)
+        {
+            FailLevel();
+        }
+    }
+
+    private void WinLevel()
+    {
+        if (currentLevel < Levels.Count - 1)
+        {
+            PlayerPrefs.SetInt("currentLevel", currentLevel + 1);
+        }
+        StopCharacterMove();
+        Invoke(nameof(ChangeCanvasToWin), 2);
+        GameManager.ChangeState(GameState.Finish);
+    }
+
+    private void FailLevel()
+    {
+        StopCharacterMove();
+        Invoke(nameof(ChangeCanvasToLose), 2);
+        GameManager.ChangeState(GameState.Finish);
+    }
+
+    private void ChangeCanvasToWin()
+    {
+        UIManager.Ins.GetUI<CanvasGamePlay>().PlayerWin();
+    }
+
+    private void ChangeCanvasToLose()
+    {
+        UIManager.Ins.GetUI<CanvasGamePlay>().PlayerLose();
     }
 
     public void OnInit()
@@ -60,30 +105,38 @@ public class LevelManager : Singleton<LevelManager>
         //Setup Level
         Level level_ = Instantiate(Levels[levelIndex], transform);
         level_.OnInit();
-        currentLevelList.Add(level_);
-        Dictionary<ColorType, Vector3> dict = level_.characterPosDictionary;
+        levelList.Add(level_);
+        Dictionary<ColorType, Vector3> characterPos = level_.characterPosDictionary;
 
         //Setup Player
         Player player_ = Instantiate(player);
-        player_.winPos = level_.winPos;
         player_.joyStick = joystick;
-        ColorType randomColor = dict.ElementAt(Random.Range(0, dict.Count)).Key;
-        player_.OnInit(randomColor);
-        player_.transform.position = dict[randomColor];
-        dict.Remove(randomColor);
-        currentPlayerList.Add(player_);
+        characterList.Add(player_);
         cam.FollowToTarget(player_.transform);
+        //player_.winPos = level_.winPos;
+        //player_.OnInit(randomColor);
+        //dict.Remove(randomColor);
 
         //Setup Bot
         for (int i = 0; i < 3; i++)
         {
-            randomColor = dict.ElementAt(Random.Range(0, dict.Count)).Key;
-            Bot bot_ = Instantiate(bot, dict[randomColor], Quaternion.identity);
-            bot_.winPos = level_.winPos;
+            Bot bot_ = Instantiate(bot);
             bot_.CurrentLevel = level_;
-            bot_.OnInit(randomColor);
-            dict.Remove(randomColor);
-            currentBotList.Add(bot_);
+            characterList.Add(bot_);
+            //bot_.winPos = level_.winPos;
+            //bot_.OnInit(randomColor);
+            //dict.Remove(randomColor);
+        }
+
+        //Setup for character
+        ColorType randomColor;
+        foreach (Character character in characterList)
+        {
+            randomColor = characterPos.ElementAt(Random.Range(0, characterPos.Count)).Key;
+            character.winPos = level_.winPos;
+            character.OnInit(randomColor);
+            character.transform.position = characterPos[randomColor];
+            characterPos.Remove(randomColor);
         }
 
     }
@@ -103,63 +156,19 @@ public class LevelManager : Singleton<LevelManager>
     {
         cam.FollowToTarget(cam.transform);
         SimplePool.CollectAll();
-        foreach (var level in currentLevelList)
+        foreach (var level in levelList)
         {
             Destroy(level.gameObject);
         }
 
-        foreach (var player in currentPlayerList)
+        foreach (var character in characterList)
         {
-            Destroy(player.gameObject);
+            Destroy(character.gameObject);
         }
 
-        foreach (var bot in currentBotList)
-        {
-            Destroy(bot.gameObject);
-        }
-        currentLevelList.Clear();
-        currentPlayerList.Clear();
-        currentBotList.Clear();
+        levelList.Clear();
+        characterList.Clear();
     }
 
-    private void StopCharacterMove()
-    {
-        foreach (Player player in currentPlayerList)
-        {
-            player.Stop();
-        }
 
-        foreach (Bot bot in currentBotList)
-        {
-            bot.Stop();
-        }
-
-    }
-
-    private void CompleteLevel()
-    {
-        if(currentLevel <  Levels.Count - 1)
-        {
-            PlayerPrefs.SetInt("currentLevel", currentLevel + 1);
-        }
-        StopCharacterMove();
-        Invoke(nameof(ChangeCanvasToWin), 2);
-        GameManager.ChangeState(GameState.Finish);
-    }
-
-    private void FailLevel()
-    {
-        StopCharacterMove();
-        Invoke(nameof(ChangeCanvasToLose), 2);
-        GameManager.ChangeState(GameState.Finish);
-    }
-
-    private void ChangeCanvasToWin()
-    {
-        UIManager.Ins.GetUI<CanvasGamePlay>().PlayerWin();
-    }
-    private void ChangeCanvasToLose()
-    {
-        UIManager.Ins.GetUI<CanvasGamePlay>().PlayerLose();
-    }
 }

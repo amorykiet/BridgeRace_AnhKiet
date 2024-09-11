@@ -19,38 +19,24 @@ public class Level : MonoBehaviour
 
     private void OnEnable()
     {
-        Player.onPlayerOpenDoor += OnOpenDoor;
-        Player.onPlayerWin += OnFinish;
-        Bot.onBotOpenDoor += OnOpenDoor;
-        Bot.onBotWin += OnFinish;
+        Character.onOpenDoor += OnOpenDoor;
+        Character.onWin += FollowWinPos;
     }
 
     private void OnDisable()
     {
-        Player.onPlayerOpenDoor -= OnOpenDoor;
-        Player.onPlayerWin -= OnFinish;
-        Bot.onBotOpenDoor -= OnOpenDoor;
-        Bot.onBotWin -= OnFinish;
+        Character.onOpenDoor -= OnOpenDoor;
+        Character.onWin -= FollowWinPos;
 
     }
 
-    public Stage GetStage(int stage)
-    {
-        return stageList[stage];
-    }
-
-    private void OnFinish()
+    private void FollowWinPos(Character character)
     {
         cam.FollowToTarget(winPos);
     }
 
-    private void OnOpenDoor(int currentStage, ColorType color)
+    private void OnOpenDoor(Character character, int currentStage, ColorType color)
     {
-        //if (this.currentStage > currentStage)
-        //{
-        //    return;
-        //}
-        //this.currentStage = currentStage;
         stageList[currentStage].SpawnBrickByColor(color);
     }
 
@@ -66,5 +52,9 @@ public class Level : MonoBehaviour
 
     }
 
+    public Stage GetStage(int stage)
+    {
+        return stageList[stage];
+    }
 
 }
