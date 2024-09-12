@@ -22,7 +22,6 @@ public abstract class Character : MonoBehaviour
     protected bool stopMovement = false;
     protected Transform tf;
 
-
     public Transform winPos;
     public LayerMask brickOnStairMask;
     public int BrickCollected => BrickStack.Count;
@@ -41,6 +40,12 @@ public abstract class Character : MonoBehaviour
     abstract public void OnInit(ColorType colorType);
     abstract public void Stop();
 
+    public void GoToPos(Transform target)
+    {
+        transform.position = target.position;
+        transform.rotation = Quaternion.Euler(0,180,0);
+    }
+
     protected void AddBrick()
     {
         Brick brick = SimplePool.Spawn<Brick>(PoolType.Brick, Vector3.up * 0.5f * BrickStack.Count, Quaternion.identity, stackOffset);
@@ -54,7 +59,7 @@ public abstract class Character : MonoBehaviour
         brick.OnDespawn();
     }
 
-    protected void ClearBrick()
+    public void ClearBrick()
     {
         while (BrickCollected > 0)
         {
@@ -104,6 +109,7 @@ public abstract class Character : MonoBehaviour
     {
         if (collision.collider.CompareTag("Winpos"))
         {
+            collision.collider.enabled = false;
             CollideWinPos();
         }
     }
@@ -119,4 +125,8 @@ public abstract class Character : MonoBehaviour
 
     }
 
+    public void Dance()
+    {
+        ChangeAnim("dance");
+    }
 }

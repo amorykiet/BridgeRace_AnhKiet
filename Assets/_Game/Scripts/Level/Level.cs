@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
+    public Dictionary<ColorType, Vector3> characterPosDictionary = new();
+    public List<Transform> winPosList = new();
     public Transform winPos;
 
     [SerializeField] private List<Stage> stageList;
@@ -15,7 +17,6 @@ public class Level : MonoBehaviour
     [SerializeField] private int colorNumber = 4;
 
 
-    public Dictionary<ColorType, Vector3> characterPosDictionary = new();
 
     private void OnEnable()
     {
@@ -49,7 +50,6 @@ public class Level : MonoBehaviour
         {
             characterPosDictionary.Add((ColorType)(i + 1), startPos.transform.position + Vector3.right * 4 * i);
         }
-
     }
 
     public Stage GetStage(int stage)

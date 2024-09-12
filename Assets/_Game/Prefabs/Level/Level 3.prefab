@@ -80,7 +80,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce5ea2e27d2671419cacf38f26c4bcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winPos: {fileID: 8298848505548042561}
+  winPosList:
+  - {fileID: 5973328747210580109}
+  - {fileID: 1055626154875642799}
+  - {fileID: 8891728264987640926}
+  winPos: {fileID: 8891728264987640926}
   stageList:
   - {fileID: 8412805666162030215}
   - {fileID: 4178306938863449735}
@@ -816,9 +820,19 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4095187352950006693, guid: 84e5fce2d8dde744187082295cee9a28, type: 3}
   m_PrefabInstance: {fileID: 4489429132227414185}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &8298848505548042561 stripped
+--- !u!4 &1055626154875642799 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 5577363705194904040, guid: 84e5fce2d8dde744187082295cee9a28, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3525190853399014150, guid: 84e5fce2d8dde744187082295cee9a28, type: 3}
+  m_PrefabInstance: {fileID: 4489429132227414185}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5973328747210580109 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7829559468280588324, guid: 84e5fce2d8dde744187082295cee9a28, type: 3}
+  m_PrefabInstance: {fileID: 4489429132227414185}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8891728264987640926 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4983351448777985271, guid: 84e5fce2d8dde744187082295cee9a28, type: 3}
   m_PrefabInstance: {fileID: 4489429132227414185}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4584634528551567100

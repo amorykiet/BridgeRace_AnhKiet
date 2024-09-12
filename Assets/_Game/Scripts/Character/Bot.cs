@@ -2,6 +2,7 @@ using Scriptable;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.UI.GridLayoutGroup;
@@ -41,9 +42,6 @@ public class Bot : Character
 
     override protected void CollideWinPos()
     {
-        ClearBrick();
-        ChangeAnim("dance");
-        Stop();
         base.OnWin(this);
     }
 
@@ -92,9 +90,8 @@ public class Bot : Character
     override public void Stop()
     {
         stopMovement = true;
-        agent.isStopped = true;
+        agent.enabled = false;
     }
 
-
-
+    
 }

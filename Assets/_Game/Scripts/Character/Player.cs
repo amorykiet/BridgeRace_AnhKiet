@@ -19,12 +19,11 @@ public class Player : Character
     private bool grounded;
     private RaycastHit hitBrickOnStair;
     private bool canMoveUp = true;
+    private Vector3 direction;
 
 
     private void Update()
-    {
-        Debug.DrawLine(TF.position, TF.position + Vector3.down * 0.5f, Color.red);
-        
+    {        
         //Stop move after win
         if (stopMovement)
         {
@@ -51,6 +50,7 @@ public class Player : Character
 
     private void FixedUpdate()
     {
+        direction = Vector3.zero;
         if (stopMovement)
         {
             return;
@@ -60,12 +60,6 @@ public class Player : Character
 
     override protected void CollideWinPos()
     {
-        //Go to win pos
-        tf.position = winPos.position;
-        tf.rotation = winPos.rotation;
-        ClearBrick();
-        ChangeAnim("dance");
-        Stop();
         base.OnWin(this);
     }
 
@@ -82,11 +76,14 @@ public class Player : Character
 
     override public void Stop()
     {
+        joyStick.gameObject.SetActive(false);
         stopMovement = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     override public void OnInit(ColorType colorType)
     {
+        joyStick.gameObject.SetActive(true);
         myColor = colorType;
         skinnedMeshRenderer.material = colorData.GetMat(myColor);
         currentStageIndex = 0;
@@ -137,7 +134,7 @@ public class Player : Character
     private void MoveWithJoyStick()
     {
         //Movement
-        Vector3 direction = new Vector3(joyStick.Direction.x, 0, joyStick.Direction.y).normalized;
+        direction = new Vector3(joyStick.Direction.x, 0, joyStick.Direction.y).normalized;
         if (grounded)
         {
             if (IsOnSlope())

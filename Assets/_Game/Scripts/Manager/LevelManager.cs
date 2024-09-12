@@ -10,12 +10,12 @@ public class LevelManager : Singleton<LevelManager>
 {
     public FixedJoystick joystick;
 
-    [SerializeField] private List<Level> Levels = new();
+    [SerializeField] private List<Level> levelList = new();
     [SerializeField] private Player player;
     [SerializeField] private Bot bot;
     [SerializeField] private CameraFollow cam;
 
-    private List<Level> levelList = new();
+    private List<Level> runtimeLevelList = new();
     private List<Character> characterList = new();
 
     private int currentLevel;
@@ -42,6 +42,25 @@ public class LevelManager : Singleton<LevelManager>
 
     private void CompleteLevel(Character character)
     {
+        StopCharacterMove();
+        List<Character> sortedCharacterList = characterList.OrderBy(o => o.BrickCollected).ToList();
+        ClearCharacterBrick();
+
+        //character win pos
+        character.GoToPos(levelList[currentLevel].winPos);
+        character.Dance();
+        sortedCharacterList.Remove(character);
+
+        //other character drop the one with the least bricks
+        for (int i = 1; i < 3; i++)
+        {
+            sortedCharacterList[i].GoToPos(levelList[currentLevel].winPosList[i - 1]);
+            sortedCharacterList[i].Dance();
+
+        }
+
+        GameManager.ChangeState(GameState.Finish);
+
         if (character is Player)
         {
             WinLevel();
@@ -52,22 +71,27 @@ public class LevelManager : Singleton<LevelManager>
         }
     }
 
+    private void ClearCharacterBrick()
+    {
+        foreach(Character character in characterList)
+        {
+            character.ClearBrick();
+        }
+    }
+
     private void WinLevel()
     {
-        if (currentLevel < Levels.Count - 1)
+        if (currentLevel < levelList.Count - 1)
         {
             PlayerPrefs.SetInt("currentLevel", currentLevel + 1);
         }
-        StopCharacterMove();
         Invoke(nameof(ChangeCanvasToWin), 2);
-        GameManager.ChangeState(GameState.Finish);
     }
 
     private void FailLevel()
     {
         StopCharacterMove();
         Invoke(nameof(ChangeCanvasToLose), 2);
-        GameManager.ChangeState(GameState.Finish);
     }
 
     private void ChangeCanvasToWin()
@@ -103,9 +127,9 @@ public class LevelManager : Singleton<LevelManager>
     public void LoadLevel(int levelIndex)
     {
         //Setup Level
-        Level level_ = Instantiate(Levels[levelIndex], transform);
+        Level level_ = Instantiate(levelList[levelIndex], transform);
         level_.OnInit();
-        levelList.Add(level_);
+        runtimeLevelList.Add(level_);
         Dictionary<ColorType, Vector3> characterPos = level_.characterPosDictionary;
 
         //Setup Player
@@ -113,9 +137,6 @@ public class LevelManager : Singleton<LevelManager>
         player_.joyStick = joystick;
         characterList.Add(player_);
         cam.FollowToTarget(player_.transform);
-        //player_.winPos = level_.winPos;
-        //player_.OnInit(randomColor);
-        //dict.Remove(randomColor);
 
         //Setup Bot
         for (int i = 0; i < 3; i++)
@@ -123,9 +144,6 @@ public class LevelManager : Singleton<LevelManager>
             Bot bot_ = Instantiate(bot);
             bot_.CurrentLevel = level_;
             characterList.Add(bot_);
-            //bot_.winPos = level_.winPos;
-            //bot_.OnInit(randomColor);
-            //dict.Remove(randomColor);
         }
 
         //Setup for character
@@ -144,7 +162,7 @@ public class LevelManager : Singleton<LevelManager>
     public void LoadNextLevel()
     {
         ClearLevel();
-        if (currentLevel == Levels.Count - 1)
+        if (currentLevel == levelList.Count - 1)
         {
             LoadLevel(currentLevel);
             return;
@@ -157,7 +175,7 @@ public class LevelManager : Singleton<LevelManager>
         cam.FollowToTarget(cam.transform);
         SimplePool.CollectAll();
 
-        foreach (var level in levelList)
+        foreach (var level in runtimeLevelList)
         {
             Destroy(level.gameObject);
         }
@@ -167,7 +185,7 @@ public class LevelManager : Singleton<LevelManager>
             Destroy(character.gameObject);
         }
 
-        levelList.Clear();
+        runtimeLevelList.Clear();
         characterList.Clear();
     }
 

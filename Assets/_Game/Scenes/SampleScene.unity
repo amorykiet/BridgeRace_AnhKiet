@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joystick: {fileID: 0}
-  Levels:
+  levelList:
   - {fileID: 6674714512050847498, guid: 9e8a40ee5f47d1249862bec57fe1fbc4, type: 3}
   - {fileID: 213375580163997224, guid: 69f9a1f008e3d6946a8385f4c6923f0c, type: 3}
   - {fileID: 1944429542282584980, guid: 450ea04cc7e75f54fbcdc293c993fa82, type: 3}
