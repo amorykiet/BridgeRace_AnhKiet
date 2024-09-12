@@ -10,13 +10,13 @@ public class CanvasDefeated : UICanvas
     public void Setting()
     {
         settingButton.gameObject.SetActive(false);
-        UIManager.Ins.OpenUI<CanvasSetting>().SetButton(settingButton);
+        UIManager.Ins.OpenUI<CanvasSetting>().SetButton(settingButton).OnInit(this);
     }
 
     public void Retry()
     {
         UIManager.Ins.CloseAll();
-        UIManager.Ins.OpenUI<CanvasGamePlay>();
+        UIManager.Ins.OpenUI<CanvasGamePlay>().OnInit();
         LevelManager.Ins.ReloadLevel();
         GameManager.ChangeState(GameState.GamePlay);
     }

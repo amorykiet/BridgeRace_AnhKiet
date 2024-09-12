@@ -10,7 +10,8 @@ public class CanvasMainMenu : UICanvas
     public void Play()
     {
         Close(0);
-        UIManager.Ins.OpenUI<CanvasGamePlay>().AttachJoyStick();
+        Time.timeScale = 1;
+        UIManager.Ins.OpenUI<CanvasGamePlay>().AttachJoyStick().OnInit();
         LevelManager.Ins.OnInit();
         GameManager.ChangeState(GameState.GamePlay);
     }
@@ -18,6 +19,6 @@ public class CanvasMainMenu : UICanvas
     public void Setting()
     {
         settingButton.gameObject.SetActive(false);
-        UIManager.Ins.OpenUI<CanvasSetting>().SetButton(settingButton);
+        UIManager.Ins.OpenUI<CanvasSetting>().SetButton(settingButton).OnInit(this);
     }
 }

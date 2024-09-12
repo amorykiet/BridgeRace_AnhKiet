@@ -10,7 +10,7 @@ public class CanvasVictory : UICanvas
     public void Setting()
     {
         settingButton.gameObject.SetActive(false);
-        UIManager.Ins.OpenUI<CanvasSetting>().SetButton(settingButton);
+        UIManager.Ins.OpenUI<CanvasSetting>().SetButton(settingButton).OnInit(this);
     }
 
     public void NextLevel()
@@ -26,7 +26,7 @@ public class CanvasVictory : UICanvas
     {
         LevelManager.Ins.ReloadLevel();
         UIManager.Ins.CloseAll();
-        UIManager.Ins.OpenUI<CanvasGamePlay>();
+        UIManager.Ins.OpenUI<CanvasGamePlay>().OnInit();
         GameManager.ChangeState(GameState.GamePlay);
     }
 
